@@ -103,7 +103,7 @@ public class ForegroundChannel : NSObject {
     }
     
     private func startTracking(_ result: @escaping FlutterResult) {
-        let isLowAccuracy = SharedPrefsUtil.accuracyType() == kCLLocationAccuracyKilometer {
+        if SharedPrefsUtil.accuracyType() == kCLLocationAccuracyKilometer {
             locationManager.startMonitoringSignificantLocationChanges()
         } else {
             locationManager.startUpdatingLocation()
