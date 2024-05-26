@@ -50,6 +50,7 @@ public class ForegroundChannel : NSObject {
         let callBackHandleKey = "callback_handle"
         let loggingEnabledKey = "logging_enabled"
         let activityTypeKey = "ios_activity_type"
+        let accuracyTypeKey = "ios_activity_type"
         let distanceFilterKey = "ios_distance_filter"
         let restartAfterKillKey = "ios_restart_after_kill"
         let map = call.arguments as? [String: Any]
@@ -57,14 +58,13 @@ public class ForegroundChannel : NSObject {
             result(false)
             return
         }
-        
-        
+
         let loggingEnabled: Bool = map?[loggingEnabledKey] as? Bool ?? false
         SharedPrefsUtil.saveLoggingEnabled(loggingEnabled)
         SharedPrefsUtil.saveRestartAfterKillEnabled(map?[restartAfterKillKey] as? Bool ?? false)
         
         let activityType: CLActivityType
-        switch (map?[activityTypeKey] as? String ?? "AUTOMOTIVE") {
+        switch (map?[activityTypeKey] as? String) {
         case "OTHER":
             activityType = .other
         case "FITNESS":
@@ -82,8 +82,19 @@ public class ForegroundChannel : NSObject {
         default:
             activityType = .automotiveNavigation
         }
-        
+
+        let accuracyType: CLLocationAccuracy
+        switch (map?[accuracyTypeKey] as? String) {
+        case "HIGH":
+            accuracyType = kCLLocationAccuracyBest
+        case "LOW":
+            accuracyType = kCLLocationAccuracyKilometer
+        default:
+            accuracyType = kCLLocationAccuracyBest
+        }
+
         SharedPrefsUtil.saveActivityType(activityType)
+        SharedPrefsUtil.saveAccuracyType(accuracyType)
         SharedPrefsUtil.saveDistanceFilter(map?[distanceFilterKey] as? Double ?? kCLDistanceFilterNone)
         
         SharedPrefsUtil.saveCallBackDispatcherHandleKey(callBackHandle: callbackDispatcherHandle as? Int64)
@@ -92,7 +103,11 @@ public class ForegroundChannel : NSObject {
     }
     
     private func startTracking(_ result: @escaping FlutterResult) {
-        locationManager.startUpdatingLocation()
+        let isLowAccuracy = SharedPrefsUtil.accuracyType() == kCLLocationAccuracyKilometer {
+            locationManager.startMonitoringSignificantLocationChanges()
+        } else {
+            locationManager.startUpdatingLocation()
+        }
         isTracking = true
         SharedPrefsUtil.saveIsTracking(isTracking)
         result(true)

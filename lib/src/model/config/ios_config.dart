@@ -4,11 +4,15 @@ import 'package:flutter/foundation.dart';
 ///
 /// Default Values:
 /// - activityType: [ActivityType.AUTOMOTIVE]
+/// - accuracyType: [AccuracyType.HIGH]
 /// - distanceFilterMeters: null
 @immutable
 class IOSConfig {
   /// The type of activity, default to [ActivityType.AUTOMOTIVE]
   final ActivityType activityType;
+
+  /// Accuracy of location update events, that will be monitored by iOS and handled
+  final AccuracyType accuracyType;
 
   /// Restart the location tracker when the app is recreated
   /// after it has been killed by the user. Defaults to false
@@ -20,19 +24,20 @@ class IOSConfig {
 
   const IOSConfig({
     this.activityType = ActivityType.AUTOMOTIVE,
+    this.accuracyType = AccuracyType.HIGH,
     this.distanceFilterMeters,
     this.restartAfterKill = false,
   });
 }
 
 enum ActivityType {
-  /// positioning in activities that are not covered by one of
+  /// Positioning in activities that are not covered by one of
   /// the other activity types.  Includes activities without a
   /// specific user intention; for example, positioning while
   /// the user sits on a bench interacting with the device
   OTHER,
 
-  /// positioning in an automobile following a road network
+  /// Positioning in an automobile following a road network
   AUTOMOTIVE,
 
   /// Positioning in dedicated fitness sessions, e.g. walking,
@@ -46,8 +51,16 @@ enum ActivityType {
   /// e.g. walking
   NAVIGATION,
 
-  ///positioning for activities in the air, e.g. flying in an
+  /// Positioning for activities in the air, e.g. flying in an
   /// airplane or helicopter, paragliding, flying on a drone,
   /// skydiving, etc.  Also includes runway taxiing
   AIRBORNE,
+}
+
+enum AccuracyType {
+  /// Default accuracy (best available), triggers location update events for every location change
+  HIGH,
+
+  /// Low accuracy (~1km), triggers location update events for significant location updates only
+  LOW,
 }

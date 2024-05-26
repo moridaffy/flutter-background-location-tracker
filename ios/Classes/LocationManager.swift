@@ -13,7 +13,7 @@ class LocationManager {
     private static var sharedLocationManager: CLLocationManager = {
         let manager = CLLocationManager()
         manager.activityType = SharedPrefsUtil.activityType()
-        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.desiredAccuracy = SharedPrefsUtil.accuracyType()
         manager.distanceFilter = SharedPrefsUtil.distanceFilter()
         manager.pausesLocationUpdatesAutomatically = false
         if #available(iOS 11, *) {

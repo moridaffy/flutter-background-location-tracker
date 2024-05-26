@@ -16,6 +16,7 @@ struct SharedPrefsUtil {
     private static let KEY_LOGGING_ENABLED = "background.location.tracker.manager.LOGGIN_ENABLED"
     private static let KEY_DISTANCE_FILTER = "background.location.tracker.manager.DISTANCE_FILTER"
     private static let KEY_ACTIVITY_TYPE = "background.location.tracker.manager.KEY_ACTIVITY_TYPE"
+    private static let KEY_ACCURACY_TYPE = "background.location.tracker.manager.KEY_ACCURACY_TYPE"
     
     private static let userDefaults = UserDefaults(suiteName: "\(SwiftBackgroundLocationTrackerPlugin.identifier).userDefaults")!
     
@@ -58,6 +59,10 @@ struct SharedPrefsUtil {
     static func saveActivityType(_ activityType: CLActivityType) {
         store(activityType.rawValue, key: SharedPrefsUtil.KEY_ACTIVITY_TYPE)
     }
+
+    static func saveAccuracyType(_ accuracyType: CLLocationAccuracy) {
+        store(accuracyType, key: SharedPrefsUtil.KEY_ACCURACY_TYPE)
+    }
     
     static func isLoggingEnabled() -> Bool {
         return getValue(for: SharedPrefsUtil.KEY_LOGGING_ENABLED) ?? false
@@ -71,6 +76,10 @@ struct SharedPrefsUtil {
         guard let rawValue: Int = getValue(for: SharedPrefsUtil.KEY_ACTIVITY_TYPE) else { return CLActivityType.other }
         
         return CLActivityType.init(rawValue: rawValue) ?? CLActivityType.other
+    }
+
+    static func accuracyType() -> CLLocationAccuracy {
+        return getValue(for: SharedPrefsUtil.KEY_ACCURACY_TYPE) ?? kCLLocationAccuracyBest
     }
     
     // MARK: - Helper methods

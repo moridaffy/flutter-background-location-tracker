@@ -99,6 +99,7 @@ Future<void> main() async {
       ),
       iOSConfig: IOSConfig(
         activityType: ActivityType.FITNESS,
+        accuracyType: AccuracyType.HIGH,
         distanceFilterMeters: null,
         restartAfterKill: true,
       ),

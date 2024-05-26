@@ -5,6 +5,7 @@ void main() {
   test('iOS Config default', () async {
     const config = IOSConfig();
     expect(config.activityType, ActivityType.AUTOMOTIVE);
+    expect(config.accuracyType, AccuracyType.HIGH);
     expect(config.distanceFilterMeters, null);
     expect(config.restartAfterKill, false);
   });
